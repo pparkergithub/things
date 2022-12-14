@@ -1,24 +1,28 @@
-export enum ResourceType {
-    MANA,
-    HEALTH
-}
+import { Ref, ref } from "vue";
 
 export interface ResourceCost {
-    type: ResourceType;
+    type?: string;
     value?: number;
 }
 
 export interface UseResourceManagement {
-    type: ResourceType;
+    type: Ref<string>;
     currentValue: Ref<number>;
     maxValue: Ref<number>;
     useResource(amountUsed: number): void;
     replenishResource(amountReplenished: number): void;
 }
 
-export const useResourceManagement = (type: ResourceType, currentValue: number, maxValue: number): UseResourceManagement => {
-    const _currentValue = ref(currentValue);
-    const _maxValue = ref(maxValue);
+export interface UseResourceManagementParams {
+    type: string;
+    currentValue: number;
+    maxValue: number;
+}
+
+export const useResourceManagement = (params: UseResourceManagementParams): UseResourceManagement => {
+    const _type = ref(params.type);
+    const _currentValue = ref(params.currentValue);
+    const _maxValue = ref(params.maxValue);
 
     const useResource = (amountUsed: number) => {
         _currentValue.value = Math.max(0, _currentValue.value - amountUsed);
@@ -29,9 +33,9 @@ export const useResourceManagement = (type: ResourceType, currentValue: number, 
     }
 
     return {
-        type,
-        _currentValue,
-        _maxValue,
+        type: _type,
+        currentValue: _currentValue,
+        maxValue: _maxValue,
         useResource,
         replenishResource
     }

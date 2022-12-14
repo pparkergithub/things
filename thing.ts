@@ -5,5 +5,3 @@ export interface Thing {
 interface Character {
     name?: string;
 }
-
-interface 

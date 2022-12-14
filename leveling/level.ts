@@ -1,26 +1,34 @@
+import { Ref, ref } from "vue";
+
 export interface UseLeveling {
-    currentLevel?: Ref<number>;
-    maxLevel?: Ref<number>;
+    currentLevel: Ref<number>;
+    maxLevel: Ref<number | undefined>;
     levelUp(): void;
 }
 
-export const useLeveling = (currentLevel?: number, maxLevel?: number, onLevelUpCallback?: Function): UseLeveling => {
-    const _currentLevel = ref(currentLevel);
-    const _maxLevel = ref(maxLevel);
+export interface UseLevelingParams {
+    currentLevel?: number;
+    maxLevel?: number;
+    onLevelUpCallback?: Function;
+}
+
+export const useLeveling = (params?: UseLevelingParams): UseLeveling => {
+    const _currentLevel = ref(params?.currentLevel || 0);
+    const _maxLevel = ref(params?.maxLevel);
 
     const levelUp = () => {
         const newLevel = (_currentLevel.value || 0) + 1;
         if (!_maxLevel.value || _maxLevel.value >= newLevel) {
             _currentLevel.value = newLevel;
-            if (onLevelUpCallback) {
-                onLevelUpCallback();
+            if (params?.onLevelUpCallback) {
+                params.onLevelUpCallback();
             }
         }
     }
 
     return {
-        _currentLevel,
-        _maxLevel,
+        currentLevel: _currentLevel,
+        maxLevel: _maxLevel,
         levelUp
     }
 }
