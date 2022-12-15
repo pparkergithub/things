@@ -9,15 +9,24 @@ export interface AbilityCost {
 export interface UseAbility {
     name: Ref<string>;
     cost: Ref<AbilityCost | undefined>;
-    cooldown: Ref<number | undefined>;
+    cooldown: Ref<number | undefined>; // seconds
     isOnCooldown: ComputedRef<boolean>;
+    onActivate: Ref<(() => void) | undefined>;
     activate(): void;
 }
 
-export const useAbility = (name: string, cost?: AbilityCost, cooldown?: number): UseAbility => {
-    const _name = ref(name);
-    const _cost = ref(cost);
-    const _cooldown = ref(cooldown);
+export interface UseAbilityParams {
+    name: string;
+    cost?: AbilityCost;
+    cooldown?: number; // seconds
+    onActivate?: () => void;
+}
+
+export const useAbility = (params: UseAbilityParams): UseAbility => {
+    const _name = ref(params.name);
+    const _cost = ref(params.cost);
+    const _cooldown = ref(params.cooldown);
+    const _onActivate = ref(params.onActivate);
     const _isOnCooldown = ref(false);
 
     const setCooldown = () => {
@@ -30,7 +39,9 @@ export const useAbility = (name: string, cost?: AbilityCost, cooldown?: number):
     const isOnCooldown = computed(() => _isOnCooldown.value);
 
     const activate = () => {
-        console.log(_name.value); // this will be the ability action later
+        if (_onActivate.value) {
+            _onActivate.value.call;
+        }
         setCooldown();
     }
 
@@ -41,6 +52,7 @@ export const useAbility = (name: string, cost?: AbilityCost, cooldown?: number):
         cost: _cost,
         cooldown: _cooldown,
         isOnCooldown,
+        onActivate: _onActivate,
         activate
     }
 }

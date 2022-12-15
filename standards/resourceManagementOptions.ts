@@ -5,17 +5,17 @@ export enum ResourceType {
     LIFE = 'health'
 }
 
-export const standardManaValue = 5;
-export const standardLifeValue = 10;
+export const standardManaPerLevelValue = 5;
+export const standardLifePerLevelValue = 10;
 
 export const useStandardManaSystem = () => useResourceManagement({
     type: ResourceType.MANA,
-    currentValue: standardManaValue,
-    maxValue: standardManaValue
+    currentValue: standardManaPerLevelValue,
+    maxValue: standardManaPerLevelValue
 });
 
 export const useStandardLifeSystem = () => useResourceManagement({
     type: ResourceType.LIFE,
-    currentValue: standardLifeValue,
-    maxValue: standardLifeValue
+    currentValue: standardLifePerLevelValue,
+    maxValue: standardLifePerLevelValue
 });
